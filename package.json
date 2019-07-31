@@ -1,0 +1,20 @@
+{
+  "name": "ecommerce-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.6.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
+  }
+}

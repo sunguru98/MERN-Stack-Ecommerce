@@ -1,9 +1,9 @@
 const { Router } = require('express')
-const userControllers = require('../controllers/userControllers')
+const { generalFunction } = require('../controllers/userControllers')
 
 const router = Router()
 
-router.get('/', userControllers.generalFunction)
+router.get('/', generalFunction)
 
 module.exports = router
 

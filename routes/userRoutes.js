@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const authenticate = require('../middleware/authenticate')
 const isAdmin = require('../middleware/isAdmin')
-const { signinUser, signupUser, signoutUser } = require('../controllers/userControllers')
+const { signinUser, signupUser, signoutUser, adminSignin } = require('../controllers/userController')
 const { check } = require('express-validator')
 const router = Router()
 
@@ -26,14 +26,21 @@ router.get('/', [
   check('password', 'Password is required').not().isEmpty()
 ], signinUser)
 
+// @route - GET /api/users/admin
+// @desc - Signin an admin user
+// @method - Private (both auth and admin)
+router.get('/admin', [
+  check('email', 'Email is required').not().isEmpty(),
+  check('password', 'Password is required').not().isEmpty()
+], adminSignin, isAdmin, (req, res) => {
+  res.send({ statusCode: 200, user: req.user, accessToken: `Bearer ${req.accessToken}`, expiresIn: '24h' })
+})
+
 // @route - DELETE /api/users/
 // @desc - Signin a user
 // @method - Private
 router.delete('/', authenticate, signoutUser)
 
-router.get('/test', authenticate, isAdmin, (req, res) => {
-  res.send({ statusCode: 200, message: 'You are an admin' })
-})
 
 module.exports = router
 

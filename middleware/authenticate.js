@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/User')
 
 const authenticate = async (req, res, next) => {
-  let accessToken = req.header('Authorization')
+  let accessToken = req.header('Authorization') || req.accessToken
   try {
     if (!accessToken) throw new Error()
     accessToken = accessToken.replace('Bearer ', '')

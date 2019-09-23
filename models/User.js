@@ -41,7 +41,7 @@ userSchema.statics = {
   authenticateUser: async (email, password) => {
     const user = await User.findOne({ email })
     if (!user) throw new Error('Invalid credentials')
-    const isMatched = await bcrypt.compare(user.password, password)
+    const isMatched = await bcrypt.compare(password, user.password)
     if (!isMatched) throw new Error('Invalid credentials')
     return user
   }
@@ -51,6 +51,7 @@ userSchema.methods = {
   toJSON: function () {
     const user = this.toObject()
     delete user.password
+    delete user.accessToken
     delete user.__v
     return user
   },

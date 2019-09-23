@@ -17,5 +17,6 @@ app.use(cookieParser())
 // Routes
 app.use('/api/users', require('./routes/userRoutes'))
 app.use('/api/categories', require('./routes/categoryRoutes'))
+app.use('/api/products', require('./routes/productRoutes'))
 
 app.listen(port, () => console.log(`Server started on port ${port}`))

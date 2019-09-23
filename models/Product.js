@@ -4,14 +4,9 @@ const productSchema = new Schema({
   name: { type: String, trim: true, required: true },
   description: { type: String, trim: true, required: true},
   price: { type: Number, trim: true, required: true},
-  category: { type: Schema.Types.ObjectId, ref: 'category', required: true},
-  totalQuantity: Number,
-  photos: [{
-    photo: {
-      type: Buffer,
-      contentType: String
-    }
-  }],
+  category: { type: Schema.Types.ObjectId, ref: 'category' },
+  totalQuantity: { type: Number, required: true },
+  photos: [String],
 
 }, { timestamps: true })
 

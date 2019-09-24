@@ -34,11 +34,13 @@ module.exports = {
 
   // Fetch All products
   fetchAllProducts: async (req, res) => {
+    const searchQuery = req.query.search || ''
     try {
-      const products = await Product.find({}).populate('category', ['name'])
+      const products = await Product.find({ name: {$regex: '^' + searchQuery , $options: 'i'} }).populate('category', ['name'])
       if (!products) res.status(404).send({ statusCode: 404, message: 'No products are found' })
       res.send({ statusCode: 200, products })
     } catch (err) {
+      console.log(err)
       res.status(500).send({ statusCode: 500, message: 'Server Error' })
     }
   },
@@ -80,7 +82,7 @@ module.exports = {
     const { productId } = req.params
     if (!productId) return res.status(400).send({ statusCode: 400, message: 'Product Id not found' })
     try {
-      
+
       const filePaths = req.files.map(file => `/${file.path}`)
       const originalFileNames = req.files.map(file => file.originalname)
 

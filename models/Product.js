@@ -18,5 +18,7 @@ productSchema.methods = {
   }
 }
 
+productSchema.index({ name: 'text' })
+
 const Product = model('product', productSchema)
 module.exports = Product

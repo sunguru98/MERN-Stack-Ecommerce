@@ -43,6 +43,21 @@ module.exports = {
     }
   },
 
+  // Fetch all products by a certain category
+  fetchAllProductsByCategory: async (req, res) => {
+    const { categoryId } = req.params
+    if (!categoryId) return res.status(400).send({ statusCode: 400, message: 'Category Id not found' })
+    try {
+      const products = await Product.find({ category: categoryId }).populate('category', ['name'])
+      if (!products) return res.status(404).send({ statusCode: 404, message: 'No products found' })
+      res.send({ statusCode: 200, products })
+    } catch (err) {
+      console.error(err.message)
+      if (err.name === 'CastError') return res.status(400).send({ statusCode: 400, message: 'Invalid Category Id' })
+      res.status(500).send({ statusCode: 500, message: 'Server Error' })
+    }
+  },
+
   // Fetch a particular product by ID
   fetchProductById: async (req, res) => {
     const { productId } = req.params

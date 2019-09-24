@@ -6,7 +6,8 @@ const categorySchema = new Schema({
     type: String,
     trim: true,
     required: true
-  }
+  },
+  user: { type: Schema.Types.ObjectId, ref: 'user' }
 }, { timestamps: true })
 
 categorySchema.methods = {

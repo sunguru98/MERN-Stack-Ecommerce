@@ -4,7 +4,7 @@ const multer = require('multer')
 
 const authenticate = require('../middleware/authenticate')
 const isAdmin = require('../middleware/isAdmin')
-const { createProduct, fetchAllProducts, fetchProductById, updateProductById, deleteProductById } = require('../controllers/productController')
+const { createProduct, fetchAllProducts, fetchAllProductsByCategory, fetchProductById, updateProductById, deleteProductById } = require('../controllers/productController')
 const { storage, limits, fileFilter } = require('../utils/mutlerUtils')
 
 const upload = multer({ storage, limits, fileFilter })
@@ -24,6 +24,11 @@ router.post('/:categoryId', authenticate, isAdmin, upload.array('product-image',
 // @desc - Fetch all products
 // @method - Public
 router.get('/', fetchAllProducts)
+
+// @route - GET /api/products/
+// @desc - Fetch all products
+// @method - Public
+router.get('/category/:categoryId', fetchAllProductsByCategory)
 
 // @route - GET /api/products/:productId
 // @desc - Fetch a product

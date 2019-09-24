@@ -5,9 +5,9 @@ const productSchema = new Schema({
   description: { type: String, trim: true, required: true},
   price: { type: Number, trim: true, required: true},
   category: { type: Schema.Types.ObjectId, ref: 'category' },
+  user: { type: Schema.Types.ObjectId, ref: 'user' },
   totalQuantity: { type: Number, required: true },
-  photos: [String],
-
+  photos: { type: [String], required: true },
 }, { timestamps: true })
 
 productSchema.methods = {

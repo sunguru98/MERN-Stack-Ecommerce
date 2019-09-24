@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const Product = require('./Product')
 
 const categorySchema = new Schema({
   name: {
@@ -15,6 +16,15 @@ categorySchema.methods = {
     return category
   }
 }
+
+categorySchema.pre('remove', async function (next) {
+  try {
+    await Product.deleteMany({ category: this._id })
+    next()
+  } catch (err) {
+    console.log(err)
+  }
+})
 
 const Category = model('category', categorySchema)
 

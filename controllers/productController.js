@@ -1,6 +1,6 @@
 const rimraf = require('rimraf')
 const path = require('path')
-const fs = require('fs')
+const fs = require('fs-extra')
 const { validationResult } = require('express-validator')
 const Product = require('../models/Product')
 
@@ -80,16 +80,27 @@ module.exports = {
     const { productId } = req.params
     if (!productId) return res.status(400).send({ statusCode: 400, message: 'Product Id not found' })
     try {
+      
       const filePaths = req.files.map(file => `/${file.path}`)
       const originalFileNames = req.files.map(file => file.originalname)
-      fs.readdir(path.join(__dirname, `../uploads/${req.body.name}`), (err, files) => {
+
+      let oldProduct = await Product.findOne({ user: req.user._id, _id: productId })
+      let product = await Product.findOneAndUpdate({ user: req.user._id, _id: productId }, { $set: req.body }, { new: true })
+
+      if (oldProduct.name !== product.name) {
+        const pathName1 = path.join(__dirname, `../uploads/${oldProduct.name}`)
+        await fs.remove(pathName1)
+      }
+      
+      const pathName2 = path.join(__dirname, `../uploads/${req.body.name}`)
+      fs.readdir(pathName2, (err, files) => {
         files.forEach(file => {
           if (!originalFileNames.includes(file)) {
             fs.unlink(path.join(__dirname, `../uploads/${req.body.name}/${file}`), () => {})
           }
         })
       })
-      let product = await Product.findOneAndUpdate({ user: req.user._id, _id: productId }, { $set: req.body }, { new: true })
+
       if (!product) return res.status(404).send({ statusCode: 404, message: 'Product not found' })
       product.photos = filePaths
       await product.save()

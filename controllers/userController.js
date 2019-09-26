@@ -68,5 +68,33 @@ module.exports = {
     } catch (err) {
       res.status(500).send({ statusCode: 500, message: 'Server Error' })
     } 
+  },
+
+  // Update User
+  updateUser: async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) return res.status(400).send({ statusCode: 400, message: errors.array() })
+    const updateableFields = ['name', 'email', 'password', 'description']
+    const requestBodyFields = Object.keys(req.body)
+    console.log(requestBodyFields)
+    const result = requestBodyFields.every(field => updateableFields.includes(field))
+    if (!result) return res.status(400).send({ statusCode: 400, message: 'Invalid request' })
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, { $set: req.body }, { new: true })
+    res.status(202).send({ statusCode: 202, user: updatedUser })
+  },
+
+  // Fetch User by Id
+  fetchUserById: async (req, res) => {
+    const { userId } = req.params
+    if (!userId) return res.status(400).send({ statusCode: 400, message: 'User Id not found' })
+    try {
+      const user = await User.findById(userId)
+      if (!user) return res.status(404).send({ statusCode: 404, message: 'User not found' })
+      res.send({ statusCode: 200, user })
+    } catch (err) {
+      if (err.name === 'CastError') return res.status(400).send({ statusCode: 400, message: 'Invalid User Id' })
+      res.status(500).send({ statusCode: 500, message: 'Server Error' })
+    }
+
   }
 }

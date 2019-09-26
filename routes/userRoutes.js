@@ -1,7 +1,8 @@
 const { Router } = require('express')
 const authenticate = require('../middleware/authenticate')
 const isAdmin = require('../middleware/isAdmin')
-const { signinUser, signupUser, signoutUser, adminSignin } = require('../controllers/userController')
+const User = require('../models/User')
+const { signinUser, signupUser, signoutUser, adminSignin, updateUser, fetchUserById } = require('../controllers/userController')
 const { check } = require('express-validator')
 const router = Router()
 
@@ -18,6 +19,19 @@ router.post('/', [
   check('description', 'Description is required').not().isEmpty()
 ], signupUser)
 
+// @route - GET /api/users/me
+// @desc - Retreive current user details
+// @method - Private (Auth)
+router.get('/me', authenticate, (req, res) => {
+  const user = req.user
+  res.send({ statusCode: 200, user })
+})
+
+// @route - GET /api/users/:userId
+// @desc - Retreive specific user by Id
+// @method - Public
+router.get('/:userId', fetchUserById)
+
 // @route - POST /api/users/
 // @desc - Signin a user
 // @method - Public
@@ -25,6 +39,11 @@ router.get('/', [
   check('email', 'Email is required').not().isEmpty(),
   check('password', 'Password is required').not().isEmpty()
 ], signinUser)
+
+// @route - PATCH /api/users/
+// @desc - Update the authenticated user details
+// @method - Private (Auth)
+router.patch('/', authenticate, updateUser)
 
 // @route - GET /api/users/admin
 // @desc - Signin an admin user

@@ -38,6 +38,7 @@ module.exports = {
     if (!categoryId) return res.status(400).send({ statusCode: 400, message: 'Category Id not found' })
     try {
       const category = await Category.findById(categoryId).populate('user', 'name')
+      if (!category) return res.status(404).send({ statusCode: 404, message: 'Category not found' })
       res.send({ statusCode: 200, category })
     } catch (err) {
       console.error(err.message)

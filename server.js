@@ -1,5 +1,6 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 
 // Allows us to read .env variables
 require('dotenv').config({ path: './.env' })
@@ -12,6 +13,7 @@ const port = process.env.PORT || 5000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
+app.use(cors())
 app.use('/uploads', express.static('uploads'))
 
 // Routes
